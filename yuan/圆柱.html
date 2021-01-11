@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+
+		<div style="width: 100%;height: 800px;background: #eee;">
+			<Canvas id="draw" width="100%" height="100%"></Canvas>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	function ellipse(x, y, a, b, rotate) {
+		//关键是bezierCurveTo中两个控制点的设置 
+		//0.5和0.6是两个关键系数（在本函数中为试验而得） 
+		var ox = 0.5 * a,
+			oy = 0.6 * b;
+		var rot = rotate ? -rotate : 0;
+		plot.save();
+		plot.rotate(rot);
+		plot.translate(x, y);
+		plot.beginPath();
+		//从椭圆纵轴下端开始逆时针方向绘制 
+		plot.moveTo(0, b);
+		plot.bezierCurveTo(ox, b, a, oy, a, 0);
+		plot.bezierCurveTo(a, -oy, ox, -b, 0, -b);
+		plot.bezierCurveTo(-ox, -b, -a, -oy, -a, 0);
+		plot.bezierCurveTo(-a, oy, -ox, b, 0, b);
+		plot.closePath();
+		plot.stroke();
+		plot.restore();
+		
+	}
+	var plot = document.getElementById('draw').getContext('2d');
+
+	var x1 = 0+400,
+		y1 = -100+400,
+		x2 = x1,
+		y2 = y1 + 400;
+	var a1 = 100,
+		b1 = 20,
+		a2 = 200,
+		b2 = 40;
+
+	ellipse(x1, y1, a1, b1,1);
+	ellipse(x2, y2, a2, b2,1);
+
+	plot.moveTo(x1 - a1, y1)
+	plot.lineTo(x2 - a2, y2)
+	plot.stroke();
+
+	plot.moveTo(x1 + a1, y1)
+	plot.lineTo(x2 + a2, y2)
+	plot.stroke();
+</script>

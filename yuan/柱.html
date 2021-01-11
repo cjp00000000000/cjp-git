@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+
+		<div style="width: 800px;height: 800px;background: #eee;">
+			<Canvas id="draw" width="800" height="800"></Canvas>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var plot = document.getElementById('draw').getContext('2d');
+
+	var arr = [-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5];
+	var arr2 = [-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5];
+	var xtrans = [-0.5, 0, -0.5, 0, 0.5, 0, 0.5, 0];
+
+	var len = arr.length;
+	var point = Math.floor(arr.length / 2);
+	var scale = 50;
+	var ydown = 0;
+	var xdown = 0;
+
+	//上面
+	//x
+	for (var i = 0; i < len; i += 2) {
+		arr[i] += xtrans[i];
+		arr[i] = arr[i] * scale + 400;
+	}
+	//y
+	for (var i = 1; i < len; i += 2) {
+		arr[i] += xtrans[i];
+		arr[i] = -arr[i] * scale * 0.5 - 100 + 400;;
+	}
+
+	//下面
+	//x
+	for (var i = 0; i < len; i += 2) {
+		arr2[i] += xtrans[i];
+		arr2[i] = arr2[i] * scale + xdown + 400;;
+	}
+	//y
+	for (var i = 1; i < len; i += 2) {
+		arr2[i] += xtrans[i];
+		arr2[i] = -arr2[i] * scale * 0.5 + ydown + 400;;
+	}
+
+	plot.beginPath()
+	plot.moveTo(arr[0], arr[1]);
+	for (var i = 1; i < point; i++) {
+		plot.lineTo(arr[2 * i], arr[2 * i + 1]);
+	}
+	plot.closePath()
+	plot.stroke();
+
+	plot.beginPath()
+	plot.moveTo(arr2[0], arr2[1]);
+	for (var i = 1; i < point; i++) {
+		plot.lineTo(arr2[2 * i], arr2[2 * i + 1]);
+	}
+	plot.closePath()
+	plot.fill();
+
+	for (var i = 0; i < point; i++) {
+		plot.moveTo(arr[2 * i], arr[2 * i + 1])
+		plot.lineTo(arr2[2 * i], arr2[2 * i + 1]);
+	}
+	plot.stroke();
+</script>
