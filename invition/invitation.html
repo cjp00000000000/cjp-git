@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title></title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			img {
+				width: 100%;
+			}
+
+			#container_box {
+				max-width: 700px;
+				width: 100%;
+				margin: 0 auto;
+			}
+
+			#container {
+				background-image: url(background_img.png);
+				background-size: 100%;
+				background-color: #020e4d;
+			}
+
+			footer {
+				text-align: center;
+			}
+
+			footer img {
+				width: 82%;
+			}
+
+			.content {
+				font-size: .27rem;
+				padding: 9%;
+				color: #fff;
+			}
+
+			.flex_box {
+				display: flex;
+			}
+
+			.item {
+				margin-bottom: .1rem;
+			}
+
+			.label {
+				text-align-last: justify;
+				width: 1.8rem;
+				display: inline-block;
+			}
+
+			.label::after {
+				content: '：';
+			}
+
+			button {
+				width: 100%;
+				font-size: .27rem;
+				line-height: 3em;
+				height: 3em;
+				background-color: #ddd;
+				border: 0;
+			}
+
+			.fontColor {
+				color: #cca56e;
+			}
+
+			.text,
+			.project,
+			.position,
+			.name {
+				cursor: pointer;
+			}
+
+			#mask {
+				height: 100%;
+				width: 100%;
+				position: fixed;
+				top: 0;
+				background-color: rgba(0, 0, 0, .8);
+				display: none;
+			}
+
+			#ipt {
+				line-height: 2em;
+				font-size: .27rem;
+				height: 2em;
+				width: 100%;
+				margin-bottom: .27rem;
+			}
+
+			.ipt_box {
+				height: 50%;
+				width: 100%;
+				max-width: 700px;
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				margin: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container_box">
+			<div id="container">
+				<header>
+					<img src="./header_img.png" />
+				</header>
+				<div class="content">
+					<p style="margin-bottom: 10px;" onclick="editText('name')">尊敬的 <span class="name fontColor"></span> 先生/女士：</p>
+					<p style="text-indent: 2em;margin-bottom: 10px;line-height: 1.75em;">感谢您对我们公司的信任和关注。经过人力资源中心的初步甄选评估，您基本符合我司岗位
+						<span onclick="editText('position')" class="position fontColor"></span>
+						的任职要求，现诚邀您参加 <span class="fontColor project" onclick="editText('project')"></span> 的面试。</p>
+					<p style="margin-bottom: 10px;">面试相关信息如下：</p>
+					<p class="item" onclick="editText('position')">
+						<span class="label">应聘岗位</span>
+						<span class="text position"></span>
+					</p>
+					<p class="item" onclick="editText('date')">
+						<span class="label">面试时间</span>
+						<span class="text date"></span>
+					</p>
+					<p class="item" onclick="editText('address')">
+						<span class="label">面试地点</span>
+						<span class="text address"></span>
+					</p>
+					<p class="item" onclick="editText('department')">
+						<span class="label">面试部门</span>
+						<span class="text department"></span>
+					</p>
+					<p class="item" onclick="editText('contacts')">
+						<span class="label">面试联系人</span>
+						<span class="text contacts"></span>
+					</p>
+					<p class="item" onclick="editText('phone')">
+						<span class="label">联系方式</span>
+						<span class="text phone"></span>
+					</p>
+					<p style="word-break: break-all;font-size: .22rem;margin: 10px 0;">(如您不能准时参加面试，请及时与HR联系。)</p>
+					<p style="text-align: right;margin-bottom: 10px;">海融软件有限公司</p>
+					<p id="newDate" style="text-align: right;margin-bottom: 10px;"></p>
+				</div>
+				<footer>
+					<img src="./footer_img.png" />
+				</footer>
+
+			</div>
+
+			<button type="button" onclick="getImg()">生成图片</button>
+		</div>
+
+		<div id="mask">
+			<div class="ipt_box">
+				<input id="ipt">
+				<button type="button" onclick="editTextOk()">确定</button>
+			</div>
+		</div>
+		<script src="./html2canvas.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var clientWidth = document.documentElement.clientWidth
+			if (clientWidth < 750) {
+				document.documentElement.style.fontSize = 100 * (clientWidth / 750) + 'px';
+			} else {
+				document.documentElement.style.fontSize = '100px'
+			}
+
+
+			var initData = localStorage.getItem('cDatas') ? JSON.parse(localStorage.getItem('cDatas')) : {
+				name: '姓名',
+				position: 'java开发',
+				date: '2020年12月17日 14:00',
+				address: '大学科技园东区18号楼A座6层',
+				department: '技术部',
+				contacts: '秦艳杰',
+				phone: '13853642354',
+				project: '海融软件'
+			}
+
+			var year = new Date().getFullYear()
+			var month = new Date().getMonth() + 1
+			var date = new Date().getDate()
+			document.getElementById('newDate').innerHTML = `${year}年${month}月${date}日`
+
+			function getImg() {
+				new html2canvas(document.getElementById('container'), {
+					y: 0,
+					x: clientWidth < 750 ? 0 : clientWidth / 2 - 350
+				}).then(canvas => {
+					let oImg = new Image();
+					oImg.src = canvas.toDataURL(); // 导出图片
+					oImg.crossOrigin = 'Anonymous';
+					let a = document.createElement("a"); // 生成一个a元素
+					let event = new MouseEvent("click"); // 创建一个单击事件
+					a.download = "邀请函"; // 设置图片名称
+					a.href = oImg.src; // 将生成的URL设置为a.href属性
+					a.dispatchEvent(event); // 触发a的单击事件
+				});
+			}
+
+			function setText(key) {
+				if (key) {
+					let list = document.getElementsByClassName(key)
+					for (let i in list) {
+						list[i].innerHTML = initData[key]
+					}
+				}
+			}
+
+			function initAll() {
+				setText('position')
+				setText('date')
+				setText('address')
+				setText('department')
+				setText('contacts')
+				setText('phone')
+				setText('name')
+				setText('project')
+				localStorage.setItem('cDatas', JSON.stringify(initData));
+			}
+			initAll()
+
+			function editText(key) {
+				document.getElementById('mask').style.display = 'block'
+				document.getElementById('ipt').value = initData[key]
+				document.getElementById('ipt').key = key
+				document.getElementsByTagName('body')[0].style.overflow = 'hidden'
+			}
+
+			function editTextOk() {
+				document.getElementById('mask').style.display = 'none'
+				document.getElementsByTagName('body')[0].style.overflow = 'auto'
+				let key = document.getElementById('ipt').key
+				initData[key] = document.getElementById('ipt').value
+				initAll()
+			}
+		</script>
+	</body>
+</html>
